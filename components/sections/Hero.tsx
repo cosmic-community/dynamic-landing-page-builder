@@ -11,7 +11,11 @@ interface HeroProps {
 }
 
 export default function Hero({ data }: HeroProps) {
-  const layout = data.hero_layout || 'Centered'
+  // Extract the layout value, handling both object format and string format
+  const layoutValue = typeof data.hero_layout === 'object' && data.hero_layout !== null 
+    ? data.hero_layout.value 
+    : data.hero_layout || 'Centered'
+  
   const backgroundImage = data.hero_image?.imgix_url
   
   const overlayStyle = data.hero_overlay ? {
@@ -22,7 +26,7 @@ export default function Hero({ data }: HeroProps) {
   } : {}
   
   const getLayoutClasses = () => {
-    switch (layout) {
+    switch (layoutValue) {
       case 'Centered':
         return 'text-center items-center justify-center'
       case 'Split Left':
