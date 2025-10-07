@@ -1,8 +1,8 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { optimizeImage, safeJSONParse } from '@/lib/utils'
-import type { FeaturesSection, FeatureItem } from '@/lib/types'
+import { optimizeImage, ensureArray } from '@/lib/utils'
+import type { FeaturesSection } from '@/lib/types'
 import AnimatedSection from '../ui/AnimatedSection'
 
 interface FeaturesProps {
@@ -10,74 +10,70 @@ interface FeaturesProps {
 }
 
 export default function Features({ data }: FeaturesProps) {
-  const layout = data.features_layout || 'Grid'
-  const items = safeJSONParse<FeatureItem[]>(data.feature_items, [])
+  // Ensure feature_items is an array
+  const features = ensureArray(data.feature_items)
   
-  if (!items || items.length === 0) {
+  if (features.length === 0) {
     return null
   }
   
-  const getLayoutClasses = () => {
-    switch (layout) {
-      case 'Grid':
-        return 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8'
-      case 'Alternating Image/Text':
-        return 'space-y-16'
-      case 'Centered':
-        return 'flex flex-col items-center space-y-12'
-      default:
-        return 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8'
-    }
-  }
+  const layoutKey = data.features_layout?.key || 'grid'
   
   return (
-    <AnimatedSection className="section-container bg-white">
-      <div className="text-center mb-12">
+    <section className="py-20 bg-gray-50">
+      <AnimatedSection className="section-container">
         {data.features_headline && (
-          <h2 className="section-title">{data.features_headline}</h2>
-        )}
-        {data.features_subheadline && (
-          <p className="section-subtitle">{data.features_subheadline}</p>
-        )}
-      </div>
-      
-      <div className={getLayoutClasses()}>
-        {items.map((item, index) => (
-          <motion.div
-            key={index}
+          <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: index * 0.1 }}
+            transition={{ duration: 0.6 }}
             viewport={{ once: true }}
-            className="bg-gray-50 rounded-lg p-6 hover:shadow-lg transition-shadow"
+            className="text-3xl md:text-4xl lg:text-5xl font-bold text-center mb-4"
           >
-            {item.image && (
-              <img
-                src={optimizeImage(item.image, { w: 800, h: 600, fit: 'crop', auto: 'format,compress' })}
-                alt={item.title}
-                className="w-full h-48 object-cover rounded-lg mb-4"
-              />
-            )}
-            
-            {item.icon && (
-              <div className="w-12 h-12 mb-4">
+            {data.features_headline}
+          </motion.h2>
+        )}
+        
+        {data.features_subheadline && (
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            viewport={{ once: true }}
+            className="text-xl text-gray-600 text-center mb-12 max-w-3xl mx-auto"
+          >
+            {data.features_subheadline}
+          </motion.p>
+        )}
+        
+        <div className={`grid gap-8 ${
+          layoutKey === 'grid' 
+            ? 'md:grid-cols-2 lg:grid-cols-3' 
+            : 'md:grid-cols-1'
+        }`}>
+          {features.map((feature, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: index * 0.1 }}
+              viewport={{ once: true }}
+              className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow"
+            >
+              {feature.image && (
                 <img
-                  src={optimizeImage(item.icon, { w: 96, h: 96, auto: 'format,compress' })}
-                  alt=""
-                  className="w-full h-full"
+                  src={optimizeImage(feature.image, { w: 800, h: 400, fit: 'crop', auto: 'format,compress' })}
+                  alt={feature.title}
+                  className="w-full h-48 object-cover rounded-lg mb-4"
                 />
-              </div>
-            )}
-            
-            <h3 className="text-xl font-semibold text-gray-900 mb-3">
-              {item.title}
-            </h3>
-            <p className="text-gray-600">
-              {item.description}
-            </p>
-          </motion.div>
-        ))}
-      </div>
-    </AnimatedSection>
+              )}
+              
+              <h3 className="text-2xl font-bold mb-2">{feature.title}</h3>
+              <p className="text-gray-600">{feature.description}</p>
+            </motion.div>
+          ))}
+        </div>
+      </AnimatedSection>
+    </section>
   )
 }

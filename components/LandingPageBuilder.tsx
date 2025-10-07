@@ -1,6 +1,6 @@
 'use client'
 
-import { applyBrandColors, isHiddenOnMobile } from '@/lib/utils'
+import { applyBrandColors, isHiddenOnMobile, ensureArray } from '@/lib/utils'
 import type { LandingPageMetadata } from '@/lib/types'
 import Hero from './sections/Hero'
 import Features from './sections/Features'
@@ -17,6 +17,9 @@ interface LandingPageBuilderProps {
 
 export default function LandingPageBuilder({ data }: LandingPageBuilderProps) {
   const brandStyles = applyBrandColors(data.brand_colors)
+  
+  // Ensure cta_blocks is an array
+  const ctaBlocks = ensureArray(data.cta_sections?.cta_blocks)
   
   return (
     <div style={brandStyles} className="min-h-screen">
@@ -48,7 +51,7 @@ export default function LandingPageBuilder({ data }: LandingPageBuilderProps) {
       )}
       
       {/* CTA Blocks */}
-      {data.cta_sections?.cta_blocks?.map((cta, index) => (
+      {ctaBlocks.map((cta, index) => (
         <CTABlock key={index} data={cta} />
       ))}
       

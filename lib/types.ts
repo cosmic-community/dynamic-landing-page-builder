@@ -40,16 +40,16 @@ export interface Overlay {
 // Hero section metadata
 export interface HeroSection {
   hero_enabled?: boolean
-  hero_layout?: 'Centered' | 'Split Left' | 'Split Right' | 'Full Overlay'
+  hero_layout?: { key: string; value: string }
   hero_headline?: string
   hero_subheadline?: string
   hero_description?: string
-  hero_image?: CosmicImage
-  hero_image_prompt?: string
-  hero_image_alt?: string
+  hero_image?: CosmicImage | null
+  hero_image_prompt?: string | null
+  hero_image_alt?: string | null
   hero_overlay?: Overlay
-  hero_decorative_elements?: CosmicImage[]
-  hero_decorative_prompts?: string
+  hero_decorative_elements?: CosmicImage[] | null
+  hero_decorative_prompts?: string | null
   hero_primary_cta?: CTAButton
   hero_secondary_cta?: CTAButton
 }
@@ -67,21 +67,21 @@ export interface FeatureItem {
 // Features section metadata
 export interface FeaturesSection {
   features_enabled?: boolean
-  features_headline?: string
-  features_subheadline?: string
-  features_layout?: 'Grid' | 'Alternating Image/Text' | 'Centered'
-  feature_items?: FeatureItem[]
+  features_headline?: string | null
+  features_subheadline?: string | null
+  features_layout?: { key: string; value: string }
+  feature_items?: FeatureItem[] | Record<string, never>
 }
 
 // Gallery section metadata
 export interface GallerySection {
   gallery_enabled?: boolean
-  gallery_title?: string
-  gallery_subtitle?: string
-  gallery_layout?: 'Masonry' | 'Grid 3 Column' | 'Grid 4 Column' | 'Carousel' | 'Bento Box'
-  gallery_images?: CosmicImage[]
-  gallery_prompts?: string
-  gallery_captions?: { text: string; link?: string }[]
+  gallery_title?: string | null
+  gallery_subtitle?: string | null
+  gallery_layout?: { key: string; value: string }
+  gallery_images?: CosmicImage[] | null
+  gallery_prompts?: string | null
+  gallery_captions?: { text: string; link?: string }[] | Record<string, never>
 }
 
 // Testimonial item structure
@@ -97,10 +97,10 @@ export interface TestimonialItem {
 // Testimonials section metadata
 export interface TestimonialsSection {
   testimonials_enabled?: boolean
-  testimonials_headline?: string
-  testimonials_subheadline?: string
-  testimonials_layout?: 'Carousel' | 'Grid' | 'Masonry' | 'Featured'
-  testimonials_items?: TestimonialItem[]
+  testimonials_headline?: string | null
+  testimonials_subheadline?: string | null
+  testimonials_layout?: { key: string; value: string }
+  testimonials_items?: TestimonialItem[] | Record<string, never>
 }
 
 // Stat item structure
@@ -115,11 +115,11 @@ export interface StatItem {
 // Stats section metadata
 export interface StatsSection {
   stats_enabled?: boolean
-  stats_title?: string
-  stats_background?: CosmicImage
-  stats_background_prompt?: string
-  stats_overlay?: Overlay
-  stats_items?: StatItem[]
+  stats_title?: string | null
+  stats_background?: CosmicImage | null
+  stats_background_prompt?: string | null
+  stats_overlay?: Overlay | Record<string, never>
+  stats_items?: StatItem[] | Record<string, never>
 }
 
 // CTA block structure
@@ -134,16 +134,16 @@ export interface CTABlock {
 
 // CTA sections metadata
 export interface CTASections {
-  cta_blocks?: CTABlock[]
+  cta_blocks?: CTABlock[] | Record<string, never>
 }
 
 // Logo wall section metadata
 export interface LogosSection {
   logos_enabled?: boolean
   logos_title?: string
-  logos_style?: 'Grid' | 'Marquee Scroll' | 'Carousel'
-  company_logos?: CosmicImage[]
-  logo_prompts?: string
+  logos_style?: { key: string; value: string }
+  company_logos?: CosmicImage[] | null
+  logo_prompts?: string | null
 }
 
 // Shape position structure
@@ -157,24 +157,24 @@ export interface ShapePosition {
 
 // Decorative elements metadata
 export interface DecorativeElements {
-  floating_shapes?: CosmicImage[]
-  shape_prompts?: string
-  shape_positions?: ShapePosition[]
-  pattern_overlays?: CosmicImage[]
-  pattern_prompts?: string
+  floating_shapes?: CosmicImage[] | null
+  shape_prompts?: string | null
+  shape_positions?: ShapePosition[] | Record<string, never>
+  pattern_overlays?: CosmicImage[] | null
+  pattern_prompts?: string | null
 }
 
 // Mobile settings metadata
 export interface MobileSettings {
-  mobile_hero_image?: CosmicImage
-  mobile_hero_prompt?: string
-  mobile_hidden_sections?: string[]
+  mobile_hero_image?: CosmicImage | null
+  mobile_hero_prompt?: string | null
+  mobile_hidden_sections?: string[] | null
 }
 
 // Animation settings metadata
 export interface AnimationSettings {
   scroll_animations_enabled?: boolean
-  animation_style?: 'Subtle' | 'Dynamic' | 'Minimal' | 'None'
+  animation_style?: { key: string; value: string }
   hover_effects?: boolean
   parallax_enabled?: boolean
 }
@@ -201,23 +201,23 @@ export interface SocialLink {
 
 // Footer metadata
 export interface FooterSection {
-  footer_style?: 'Minimal' | 'Full' | 'Newsletter Focus'
-  footer_logo?: CosmicImage
-  footer_logo_prompt?: string
-  footer_tagline?: string
-  footer_description?: string
-  footer_columns?: FooterColumn[]
-  footer_social?: SocialLink[]
+  footer_style?: { key: string; value: string }
+  footer_logo?: CosmicImage | null
+  footer_logo_prompt?: string | null
+  footer_tagline?: string | null
+  footer_description?: string | null
+  footer_columns?: FooterColumn[] | Record<string, never>
+  footer_social?: SocialLink[] | Record<string, never>
   newsletter_enabled?: boolean
-  newsletter_headline?: string
-  newsletter_description?: string
+  newsletter_headline?: string | null
+  newsletter_description?: string | null
 }
 
 // Visual style guide metadata
 export interface StyleGuide {
-  primary_style?: 'Photorealistic' | 'Illustration' | '3D Render' | 'Mixed'
-  color_temperature?: 'Warm' | 'Cool' | 'Neutral'
-  lighting_preference?: 'Natural Light' | 'Studio Lighting' | 'Dramatic' | 'Soft Diffused'
+  primary_style?: { key: string; value: string }
+  color_temperature?: { key: string; value: string }
+  lighting_preference?: { key: string; value: string }
   prompt_suffix?: string
   brand_keywords?: string
 }
@@ -226,7 +226,7 @@ export interface StyleGuide {
 export interface LandingPageMetadata {
   page_title?: string
   meta_description?: string
-  og_image?: CosmicImage
+  og_image?: CosmicImage | null
   brand_colors?: BrandColors
   hero_section?: HeroSection
   feature_sections?: FeaturesSection

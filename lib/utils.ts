@@ -1,79 +1,55 @@
-/**
- * Parses a multi-line string of prompts into an array
- */
-export function parsePrompts(promptsText?: string): string[] {
-  if (!promptsText) return []
-  return promptsText
-    .split('\n')
-    .map(line => line.trim())
-    .filter(line => line.length > 0)
-}
+import type { BrandColors } from './types'
 
-/**
- * Safely parses JSON metadata fields
- */
-export function safeJSONParse<T>(data: unknown, fallback: T): T {
-  if (!data) return fallback
-  if (typeof data === 'object') return data as T
-  if (typeof data === 'string') {
-    try {
-      return JSON.parse(data) as T
-    } catch {
-      return fallback
-    }
-  }
-  return fallback
-}
-
-/**
- * Generates optimized imgix URL for images
- */
-export function optimizeImage(
-  imgixUrl: string,
-  options: {
-    w?: number
-    h?: number
-    fit?: 'crop' | 'cover' | 'fill'
-    auto?: string
-  } = {}
-): string {
-  const params = new URLSearchParams()
+export function applyBrandColors(colors?: BrandColors): React.CSSProperties {
+  if (!colors) return {}
   
+  return {
+    '--color-primary': colors.primary,
+    '--color-secondary': colors.secondary,
+    '--color-accent': colors.accent,
+    '--color-background': colors.background,
+  } as React.CSSProperties
+}
+
+export function isHiddenOnMobile(section: string, hiddenSections?: string[] | null): boolean {
+  if (!hiddenSections || !Array.isArray(hiddenSections)) return false
+  return hiddenSections.includes(section)
+}
+
+interface ImageOptions {
+  w?: number
+  h?: number
+  fit?: 'crop' | 'scale' | 'max' | 'fill'
+  auto?: string
+}
+
+export function optimizeImage(
+  image: string | { imgix_url?: string; url?: string } | null | undefined,
+  options: ImageOptions = {}
+): string {
+  if (!image) return ''
+  
+  const url = typeof image === 'string' ? image : (image.imgix_url || image.url || '')
+  if (!url) return ''
+  
+  const params = new URLSearchParams()
   if (options.w) params.append('w', options.w.toString())
   if (options.h) params.append('h', options.h.toString())
   if (options.fit) params.append('fit', options.fit)
   if (options.auto) params.append('auto', options.auto)
   
-  const separator = imgixUrl.includes('?') ? '&' : '?'
-  return `${imgixUrl}${separator}${params.toString()}`
+  const queryString = params.toString()
+  return queryString ? `${url}?${queryString}` : url
 }
 
 /**
- * Applies brand colors as CSS custom properties
+ * Ensures a value is an array. Converts empty objects to empty arrays.
+ * This handles Cosmic CMS repeater fields that return {} instead of [] when empty.
  */
-export function applyBrandColors(colors?: {
-  primary?: string
-  secondary?: string
-  accent?: string
-  background?: string
-}): Record<string, string> {
-  if (!colors) return {}
-  
-  return {
-    '--brand-primary': colors.primary || '#FF6B35',
-    '--brand-secondary': colors.secondary || '#004E89',
-    '--brand-accent': colors.accent || '#F7B801',
-    '--brand-background': colors.background || '#FFFFFF',
-  }
-}
-
-/**
- * Checks if a section should be hidden on mobile
- */
-export function isHiddenOnMobile(
-  section: string,
-  hiddenSections?: string[]
-): boolean {
-  if (!hiddenSections) return false
-  return hiddenSections.includes(section)
+export function ensureArray<T>(value: T[] | Record<string, never> | null | undefined): T[] {
+  if (!value) return []
+  if (Array.isArray(value)) return value
+  // If it's an empty object {}, return empty array
+  if (typeof value === 'object' && Object.keys(value).length === 0) return []
+  return []
 }
