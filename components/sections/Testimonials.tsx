@@ -65,7 +65,7 @@ export default function Testimonials({ data }: TestimonialsProps) {
             )}
             
             <p className="text-gray-700 mb-6 italic">
-              "{item.quote}"
+              &ldquo;{item.quote}&rdquo;
             </p>
             
             <div className="flex items-center">

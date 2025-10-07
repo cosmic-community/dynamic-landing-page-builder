@@ -20,7 +20,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <script src="/dashboard-console-capture.js" />
+        <script src="/dashboard-console-capture.js" async />
       </head>
       <body className={inter.className}>
         {children}

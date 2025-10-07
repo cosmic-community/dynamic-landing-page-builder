@@ -50,7 +50,7 @@ export default async function LandingPageRoute({
             Page Not Found
           </h1>
           <p className="text-lg text-gray-600">
-            The landing page you're looking for doesn't exist.
+            The landing page you&apos;re looking for doesn&apos;t exist.
           </p>
         </div>
       </div>
